@@ -2,7 +2,7 @@
 -- Copyright Duane Robertson (duane@duanerobertson.com), 2019
 -- Distributed under the LGPLv2.1 (https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html)
 
-environ = {}
+environ = { }
 local mod, mod_name = environ, 'environ'
 mod.version = '20190524'
 mod.path = minetest.get_modpath(minetest.get_current_modname())
@@ -24,22 +24,25 @@ end
 local clone_node = mod.clone_node
 
 
+dofile(mod.path..'/nodes.lua')
+
+
 if false then
 	local name = 'test_deco'
 	local seed = 20
 	local def = {
 		deco_type = 'simple',
-		place_on = {'default:stone'},
+		place_on = { 'default:stone' },
 		sidelen = 16,
 		noise_params = {
 			offset = 0.015,
 			scale = 0.025,
-			spread = {x = 200, y = 200, z = 200},
+			spread = { x = 200, y = 200, z = 200 },
 			seed = seed,
 			octaves = 3,
 			persist = 0.6
 		},
-		--biomes = {'rainforest', 'rainforest_swamp'},
+		--biomes = { 'rainforest', 'rainforest_swamp' },
 		--y_min = 1,
 		--y_max = 31000,
 		--decoration = mod_name..':'..name,
@@ -52,59 +55,110 @@ end
 
 
 do
+	--[[
+    minetest.register_biome({
+        name = '',
+        node_dust = '',
+        node_top = '',
+        depth_top = 1,
+        node_filler = '',
+        depth_filler = 3,
+        node_stone = '',
+        node_water_top = '',
+        depth_water_top = 10,
+        node_water = '',
+        node_river_water = '',
+        node_riverbed = '',
+        depth_riverbed = 2,
+        node_cave_liquid = '',
+        node_dungeon = '',
+        node_dungeon_alt = '',
+        node_dungeon_stair = '',
+        y_max = 31000,
+        y_min = 1,
+        max_pos = { x = 31000, y = 128, z = 31000 },
+        min_pos = { x = -31000, y = 9, z = -31000 },
+        vertical_blend = 8,
+        heat_point = 0,
+        humidity_point = 50,
+    })
+	--]]
+
+    minetest.register_biome({
+        name = 'stone',
+        --node_cave_liquid = '',
+        y_max = -20,
+        vertical_blend = 8,
+        heat_point = 50,
+        humidity_point = 25,
+    })
+
+    minetest.register_biome({
+        name = 'lichen',
+        node_lining = 'environ:stone_with_lichen',
+        --node_cave_liquid = '',
+        y_max = -20,
+        vertical_blend = 8,
+        heat_point = 50,
+        humidity_point = 50,
+    })
+end
+
+
+do
 	local cap = {
 	  description = 'Giant Mushroom Cap',
-	  tiles = {'vmg_mushroom_giant_cap.png', 'vmg_mushroom_giant_under.png', 'vmg_mushroom_giant_cap.png'},
+	  tiles = { 'environ_mushroom_giant_cap.png', 'environ_mushroom_giant_under.png', 'environ_mushroom_giant_cap.png' },
 	  is_ground_content = false,
 	  paramtype = 'light',
 	  drawtype = 'nodebox',
 	  node_box = { type = 'fixed', 
 	  fixed = {
-		{-0.3, -0.25, -0.3, 0.3, 0.5, 0.3},
-		{-0.3, -0.25, -0.4, 0.3, 0.4, -0.3},
-		{-0.3, -0.25, 0.3, 0.3, 0.4, 0.4},
-		{-0.4, -0.25, -0.3, -0.3, 0.4, 0.3},
-		{0.3, -0.25, -0.3, 0.4, 0.4, 0.3},
-		{-0.4, -0.5, -0.4, 0.4, -0.25, 0.4},
-		{-0.5, -0.5, -0.4, -0.4, -0.25, 0.4},
-		{0.4, -0.5, -0.4, 0.5, -0.25, 0.4},
-		{-0.4, -0.5, -0.5, 0.4, -0.25, -0.4},
-		{-0.4, -0.5, 0.4, 0.4, -0.25, 0.5},
+		{ -0.3, -0.25, -0.3, 0.3, 0.5, 0.3 },
+		{ -0.3, -0.25, -0.4, 0.3, 0.4, -0.3 },
+		{ -0.3, -0.25, 0.3, 0.3, 0.4, 0.4 },
+		{ -0.4, -0.25, -0.3, -0.3, 0.4, 0.3 },
+		{ 0.3, -0.25, -0.3, 0.4, 0.4, 0.3 },
+		{ -0.4, -0.5, -0.4, 0.4, -0.25, 0.4 },
+		{ -0.5, -0.5, -0.4, -0.4, -0.25, 0.4 },
+		{ 0.4, -0.5, -0.4, 0.5, -0.25, 0.4 },
+		{ -0.4, -0.5, -0.5, 0.4, -0.25, -0.4 },
+		{ -0.4, -0.5, 0.4, 0.4, -0.25, 0.5 },
 	  } },
-	  light_source = 3,
-	  groups = {fleshy=1, dig_immediate=3, flammable=2, plant=1},
+	  light_source = 5,
+	  groups = { fleshy=1, dig_immediate=3, flammable=2, plant=1 },
 	}
 	minetest.register_node(mod_name..':giant_mushroom_cap', cap)
 
 	-- mushroom cap, huge
 	minetest.register_node(mod_name..':huge_mushroom_cap', {
 	  description = 'Huge Mushroom Cap',
-	  tiles = {'vmg_mushroom_giant_cap.png', 'vmg_mushroom_giant_under.png', 'vmg_mushroom_giant_cap.png'},
+	  tiles = { 'environ_mushroom_giant_cap.png', 'environ_mushroom_giant_under.png', 'environ_mushroom_giant_cap.png' },
 	  is_ground_content = false,
 	  paramtype = 'light',
 	  drawtype = 'nodebox',
 	  node_box = { type = 'fixed', 
 	  fixed = {
-		{-0.5, -0.5, -0.33, 0.5, -0.33, 0.33}, 
-		{-0.33, -0.5, 0.33, 0.33, -0.33, 0.5}, 
-		{-0.33, -0.5, -0.33, 0.33, -0.33, -0.5}, 
-		{-0.33, -0.33, -0.33, 0.33, -0.17, 0.33}, 
+		{ -0.5, -0.5, -0.33, 0.5, -0.33, 0.33 }, 
+		{ -0.33, -0.5, 0.33, 0.33, -0.33, 0.5 }, 
+		{ -0.33, -0.5, -0.33, 0.33, -0.33, -0.5 }, 
+		{ -0.33, -0.33, -0.33, 0.33, -0.17, 0.33 }, 
 	  } },
-	  light_source = 2,
-	  groups = {fleshy=1, dig_immediate=3, flammable=2, plant=1},
+	  light_source = 5,
+	  groups = { fleshy=1, dig_immediate=3, flammable=2, plant=1 },
 	})
 
 	-- mushroom stem, giant or huge
 	minetest.register_node(mod_name..':giant_mushroom_stem', {
 	  description = 'Giant Mushroom Stem',
-	  tiles = {'vmg_mushroom_giant_stem.png', 'vmg_mushroom_giant_stem.png', 'vmg_mushroom_giant_stem.png'},
+	  tiles = { 'environ_mushroom_giant_stem.png', 'environ_mushroom_giant_stem.png', 'environ_mushroom_giant_stem.png' },
 	  is_ground_content = false,
-	  groups = {choppy=2, flammable=2,  plant=1}, 
+	  groups = { choppy=2, flammable=2,  plant=1 }, 
 	  sounds = default.node_sound_wood_defaults(),
 	  sunlight_propagates = true,
 	  paramtype = 'light',
 	  drawtype = 'nodebox',
-	  node_box = { type = 'fixed', fixed = { {-0.25, -0.5, -0.25, 0.25, 0.5, 0.25}, }},
+	  node_box = { type = 'fixed', fixed = { { -0.25, -0.5, -0.25, 0.25, 0.5, 0.25 }, } },
 	})
 
 	local huge_mushroom_sch = {
@@ -126,55 +180,48 @@ do
 		},
 	}
 
-	local name = 'huge_mushroom'
-	local seed = 30
-	local def = {
+	minetest.register_decoration({
 		deco_type = 'schematic',
-		place_on = {'default:stone'},
+		place_on = { 'group:natural_stone', },
 		height_max = 6,
 		sidelen = 16,
 		noise_params = {
 			offset = 0.015,
 			scale = 0.025,
-			spread = {x = 200, y = 200, z = 200},
-			seed = seed,
+			spread = { x = 200, y = 200, z = 200 },
+			seed = 30,
 			octaves = 3,
 			persist = 0.6
 		},
-		--biomes = {'rainforest', 'rainforest_swamp'},
-		y_max = -20,
+		biomes = { 'stone', 'lichen', },
+		--y_max = -20,
 		schematic = huge_mushroom_sch,
-		name = name,
+		name = 'huge_mushroom',
 		flags = 'all_floors',
-	}
-	minetest.register_decoration(def)
+	})
 
-	local name = 'giant_mushroom'
-	local seed = 20
-	local def = {
+	minetest.register_decoration({
 		deco_type = 'schematic',
-		place_on = {'default:stone'},
-		height_max = 6,
+		place_on = { 'group:natural_stone', },
 		sidelen = 16,
 		noise_params = {
 			offset = 0.010,
 			scale = 0.025,
-			spread = {x = 200, y = 200, z = 200},
-			seed = seed,
+			spread = { x = 200, y = 200, z = 200 },
+			seed = 20,
 			octaves = 3,
 			persist = 0.6
 		},
-		--biomes = {'rainforest', 'rainforest_swamp'},
-		y_max = -20,
+		biomes = { 'stone', 'lichen', },
+		--y_max = -20,
 		schematic = giant_mushroom_sch,
-		name = name,
+		name = 'giant_mushroom',
 		flags = 'all_floors',
-	}
-	minetest.register_decoration(def)
+	})
 
 	minetest.register_node(mod_name..':glow_worm', {
 		description = 'Glow worm',
-		tiles = {'glow_worm.png'},
+		tiles = { 'environ_glow_worm.png' },
 		selection_box = {
 			type = 'fixed',
 			fixed = {
@@ -183,59 +230,56 @@ do
 		},
 		color = '#DDEEFF',
 		use_texture_alpha = true,
-		light_source = 3,
+		light_source = 6,
 		paramtype2 = 'facedir',
 		walkable = false,
-		groups = {oddly_breakable_by_hand=1, dig_immediate=2},
+		groups = { oddly_breakable_by_hand=1, dig_immediate=2 },
 		drawtype = 'plantlike',
 	})
 
 
-	local name = 'glow_worm'
-	local seed = 20
-	local def = {
+	minetest.register_decoration({
 		deco_type = 'simple',
-		place_on = {'default:stone'},
+		place_on = { 'group:natural_stone', },
 		height_max = 6,
 		sidelen = 16,
 		noise_params = {
 			offset = 0.015,
 			scale = 0.025,
-			spread = {x = 200, y = 200, z = 200},
-			seed = seed,
+			spread = { x = 200, y = 200, z = 200 },
+			seed = 52,
 			octaves = 3,
 			persist = 0.6
 		},
-		--biomes = {'rainforest', 'rainforest_swamp'},
+		biomes = { 'stone', 'lichen', },
 		--y_max = 1,
-		decoration = mod_name..':'..name,
-		name = name,
+		decoration = mod_name..':glow_worm',
+		name = 'glow_worm',
 		flags = 'all_ceilings',
-	}
-	minetest.register_decoration(def)
+	})
 end
 
 
 do
 	newnode = clone_node('default:apple')
-	newnode.tiles = {'squaresville_orange.png'}
-	newnode.inventory_image = 'squaresville_orange.png'
+	newnode.tiles = { 'environ_orange.png' }
+	newnode.inventory_image = 'environ_orange.png'
 	newnode.description = 'Orange'
 	newnode.name = mod_name..':orange'
 	minetest.register_node(newnode.name, newnode)
 
 
 	newnode = clone_node('default:apple')
-	newnode.tiles = {'squaresville_pear.png'}
-	newnode.inventory_image = 'squaresville_pear.png'
+	newnode.tiles = { 'environ_pear.png' }
+	newnode.inventory_image = 'environ_pear.png'
 	newnode.description = 'Pear'
 	newnode.name = mod_name..':pear'
 	minetest.register_node(newnode.name, newnode)
 
 
-	for _, leaf in pairs({'default:leaves', 'default:pine_needles', 'default:jungleleaves'}) do
+	for _, leaf in pairs({ 'default:leaves', 'default:pine_needles', 'default:jungleleaves' }) do
 		local num = 1
-		for _, color in pairs({'FFCCCC', 'FFFFCC', 'CCFFCC'}) do
+		for _, color in pairs({ 'FFCCCC', 'FFFFCC', 'CCFFCC' }) do
 			newnode = clone_node(leaf)
 			newnode.color = '#'..color
 			local new_leaf_name = leaf:gsub('default', mod_name) .. '_alt_' .. num
@@ -247,33 +291,33 @@ do
 
 	newnode = clone_node('default:leaves')
 	newnode.description = 'Cherry Blossoms'
-	newnode.tiles = {'squaresville_leaves_cherry.png'}
-	newnode.special_tiles = {'squaresville_leaves_cherry.png'}
-	newnode.groups = {snappy = 3, flammable = 2}
+	newnode.tiles = { 'environ_leaves_cherry.png' }
+	newnode.special_tiles = { 'environ_leaves_cherry.png' }
+	newnode.groups = { snappy = 3, flammable = 2 }
 	minetest.register_node(mod_name..':leaves_cherry', newnode)
 
 	newnode = clone_node('default:leaves')
 	newnode.description = 'Palm Fronds'
-	newnode.tiles = {'moretrees_palm_leaves.png'}
-	newnode.special_tiles = {'moretrees_palm_leaves.png'}
+	newnode.tiles = { 'moretrees_palm_leaves.png' }
+	newnode.special_tiles = { 'moretrees_palm_leaves.png' }
 	minetest.register_node(mod_name..':palm_leaves', newnode)
 
 	newnode = clone_node('default:tree')
 	newnode.description = 'Palm Tree'
-	newnode.tiles = {'moretrees_palm_trunk_top.png', 'moretrees_palm_trunk_top.png', 'moretrees_palm_trunk.png', 'moretrees_palm_trunk.png', 'moretrees_palm_trunk.png'}
-	newnode.special_tiles = {'moretrees_palm_trunk.png'}
+	newnode.tiles = { 'moretrees_palm_trunk_top.png', 'moretrees_palm_trunk_top.png', 'moretrees_palm_trunk.png', 'moretrees_palm_trunk.png', 'moretrees_palm_trunk.png' }
+	newnode.special_tiles = { 'moretrees_palm_trunk.png' }
 	minetest.register_node(mod_name..':palm_tree', newnode)
 
 	minetest.register_craft({
 		output = 'default:wood 4',
 		recipe = {
-			{mod_name..':palm_tree'},
+			{ mod_name..':palm_tree' },
 		}
 	})
 
 	--newnode = clone_node('default:apple')
 	--newnode.description = 'Coconut'
-	--newnode.tiles = {'moretrees_coconut.png'}
+	--newnode.tiles = { 'moretrees_coconut.png' }
 	--newnode.inventory_image = 'moretrees_coconut.png'
 	--newnode.after_place_node = nil
 	--minetest.register_node(mod_name..':coconut', newnode)
@@ -285,12 +329,12 @@ function new_mts(mts, nmts, opath, npath, replace)
 	if f then
 		f:close()
 
-		local sch = minetest.serialize_schematic(opath..'/'..mts, 'lua', {})
+		local sch = minetest.serialize_schematic(opath..'/'..mts, 'lua', { })
 		for _, rep in pairs(replace) do
 			sch = sch:gsub(rep[1], rep[2])
 		end
-		sch = minetest.deserialize('return {'..sch..'}')
-		local out = minetest.serialize_schematic(sch.schematic, 'mts', {})
+		sch = minetest.deserialize('return { '..sch..' }')
+		local out = minetest.serialize_schematic(sch.schematic, 'mts', { })
 		f = io.open(mod.world..'/'..nmts, 'w')
 		if f then
 			f:write(out)
@@ -322,10 +366,10 @@ if false then
 		for i = 1, 3 do
 			local nmts = mts:gsub('(.+)(%.mts)', '%1_alt_'..i..'%2')
 			local replace = {
-				{'default:leaves', mod_name..':leaves_alt_'..i},
-				{'default:pine_needles', mod_name..':pine_needles_alt_'..i},
-				{'default:jungleleaves', mod_name..':jungleleaves_alt_'..i},
-				{'default:apple', fruit[i]},
+				{ 'default:leaves', mod_name..':leaves_alt_'..i },
+				{ 'default:pine_needles', mod_name..':pine_needles_alt_'..i },
+				{ 'default:jungleleaves', mod_name..':jungleleaves_alt_'..i },
+				{ 'default:apple', fruit[i] },
 			}
 			new_mts(mts, nmts, opath, npath, replace)
 		end
@@ -335,8 +379,8 @@ if false then
 		local mts = 'apple_tree.mts'
 		local nmts = 'cherry_tree.mts'
 		local replace = {
-			{'default:leaves', mod_name..':leaves_cherry'},
-			{'default:apple', mod_name..':leaves_cherry'},
+			{ 'default:leaves', mod_name..':leaves_cherry' },
+			{ 'default:apple', mod_name..':leaves_cherry' },
 		}
 		new_mts(mts, nmts, opath, npath, replace)
 	end
@@ -346,7 +390,7 @@ end
 do
 	local pine_deco, apple_deco, jungle_deco
 
-	local decos = {}
+	local decos = { }
 	for k, v in pairs(minetest.registered_decorations) do
 		local name = v.name or v.decoration
 		decos[#decos+1] = v
@@ -437,16 +481,16 @@ do
 		end
 
 		sch.yslice_prob = {
-			{ypos = 1, prob = 128},
-			{ypos = 4, prob = 128},
+			{ ypos = 1, prob = 128 },
+			{ ypos = 4, prob = 128 },
 		}
 
 		minetest.register_decoration({
 			deco_type = 'schematic',
-			place_on = {'default:sand'},
+			place_on = { 'default:sand' },
 			sidelen = 16,
 			fill_ratio = 0.02,
-			biomes = {'desert_ocean'},
+			biomes = { 'desert_ocean' },
 			y_min = 1,
 			y_max = 1,
 			schematic = sch,
@@ -461,7 +505,7 @@ end
 
 
 local function register_flower(name, desc, biomes, seed)
-	local groups = {}
+	local groups = { }
 	groups.snappy = 3
 	groups.flammable = 2
 	groups.flower = 1
@@ -472,7 +516,7 @@ local function register_flower(name, desc, biomes, seed)
 		description = desc,
 		drawtype = "plantlike",
 		waving = 1,
-		tiles = {name .. ".png"},
+		tiles = { name .. ".png" },
 		inventory_image = name .. ".png",
 		wield_image = name .. ".png",
 		sunlight_propagates = true,
@@ -484,13 +528,13 @@ local function register_flower(name, desc, biomes, seed)
 		sounds = default.node_sound_leaves_defaults(),
 		selection_box = {
 			type = "fixed",
-			fixed = {-0.5, -0.5, -0.5, 0.5, -5/16, 0.5},
+			fixed = { -0.5, -0.5, -0.5, 0.5, -5/16, 0.5 },
 		}
 	})
 
-	local bi = {}
+	local bi = { }
 	if biomes then
-		bi = {}
+		bi = { }
 		for _, b in pairs(biomes) do
 			bi[b] = true
 		end
@@ -499,17 +543,17 @@ local function register_flower(name, desc, biomes, seed)
 	if bi['rainforest'] then
 		local def = {
 			deco_type = "simple",
-			place_on = {'default:dirt_with_rainforest_litter'},
+			place_on = { 'default:dirt_with_rainforest_litter' },
 			sidelen = 16,
 			noise_params = {
 				offset = 0.015,
 				scale = 0.025,
-				spread = {x = 200, y = 200, z = 200},
+				spread = { x = 200, y = 200, z = 200 },
 				seed = seed,
 				octaves = 3,
 				persist = 0.6
 			},
-			biomes = {'rainforest', 'rainforest_swamp'},
+			biomes = { 'rainforest', 'rainforest_swamp' },
 			y_min = 1,
 			y_max = 31000,
 			decoration = mod_name..":"..name,
@@ -520,12 +564,12 @@ local function register_flower(name, desc, biomes, seed)
 	else
 		local def = {
 			deco_type = "simple",
-			place_on = {"default:dirt_with_grass", "default:dirt_with_dry_grass", 'default:dirt_with_rainforest_litter'},
+			place_on = { "default:dirt_with_grass", "default:dirt_with_dry_grass", 'default:dirt_with_rainforest_litter' },
 			sidelen = 16,
 			noise_params = {
 				offset = -0.015,
 				scale = 0.025,
-				spread = {x = 200, y = 200, z = 200},
+				spread = { x = 200, y = 200, z = 200 },
 				seed = seed,
 				octaves = 3,
 				persist = 0.6
@@ -541,6 +585,6 @@ local function register_flower(name, desc, biomes, seed)
 	end
 end
 
-register_flower("orchid", "Orchid", {"rainforest", "rainforest_swamp"}, 783)
-register_flower("bird_of_paradise", "Bird of Paradise", {"rainforest"}, 798)
-register_flower("gerbera", "Gerbera", {"savanna", "rainforest"}, 911)
+register_flower("orchid", "Orchid", { "rainforest", "rainforest_swamp" }, 783)
+register_flower("bird_of_paradise", "Bird of Paradise", { "rainforest" }, 798)
+register_flower("gerbera", "Gerbera", { "savanna", "rainforest" }, 911)
