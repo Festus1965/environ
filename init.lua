@@ -27,6 +27,119 @@ local clone_node = mod.clone_node
 dofile(mod.path..'/nodes.lua')
 
 
+--[[
+mod.cave_biomes = {
+	{
+		name = 'granite',
+		stalagmite = {
+			node = 'default:torch',
+			chance = 50,
+			param2 = 1,
+		},
+		stone_type = mod_name..':granite',
+		underwater = true,
+	},
+	{
+		name = 'salt',
+		ceiling_node = mod_name..':stone_with_salt',
+		deco = mod_name..':radioactive_ore',
+		deco_chance = 100,
+		floor_node = mod_name..':stone_with_salt',
+		surface_depth = 2,
+		underwater = false,
+	},
+	{
+		name = 'basalt',
+		stalagmite = {
+			node = 'default:torch',
+			chance = 50,
+			param2 = 1,
+		},
+		stone_type = mod_name..':basalt',
+		underwater = true,
+	},
+	{
+		name = 'sand',
+		ceiling_node = 'default:sandstone',
+		floor_node = 'default:sand',
+		deco = mod_name..':phosph_sand',
+		deco_chance = 30,
+		surface_depth = 2,
+		underwater = true,
+	},
+	{
+		name = 'coal',
+		ceiling_node = mod_name..':black_sand',
+		deco = 'default:coalblock',
+		deco_chance = 100,
+		floor_node = mod_name..':black_sand',
+		stalagmite = {
+			node = 'fire:permanent_flame',
+			chance = 50,
+		},
+		stone_type = mod_name..':basalt',
+		surface_depth = 2,
+	},
+	{
+		name = 'lichen_dead',
+		ceiling_node = mod_name..':stone_with_lichen',
+		floor_node = mod_name..':stone_with_lichen',
+		gas = mod_name..':inert_gas',
+		stalactite = {
+			node = mod_name..':stalactite',
+			chance = 12,
+		},
+		stalagmite = {
+			node = {mod_name..':will_o_wisp_glow', mod_name..':stalagmite'},
+			chance = 50,
+		},
+		surface_depth = 1,
+		--underwater = true,
+	},
+	{
+		name = 'hell',
+		fluid = 'default:lava_source',
+		schematics = { { schematic = mod.schematics['hell_tree'], chance = 150 }, },
+		stalagmite = {
+			node = mod_name..':bound_spirit',
+			chance = 20,
+		},
+		stone_type = mod_name..':basalt',
+	},
+	{
+		name = 'hot',
+		ceiling_node = mod_name..':hot_rock',
+		floor_node = mod_name..':hot_rock',
+		fluid = 'default:lava_source',
+		stalagmite = {
+			node = mod.hot_spikes,
+			chance = 50,
+		},
+		stone_type = mod_name..':granite',
+		surface_depth = 1,
+		underwater = false,
+	},
+	{
+		name = 'ice',
+		ceiling_node = 'default:ice',
+		deco = mod_name..':will_o_wisp_glow',
+		deco_chance = 200,
+		floor_node = 'default:ice',
+		stalactite = {
+			node = mod_name..':icicle_down',
+			chance = 12,
+		},
+		stalagmite = {
+			node = mod_name..':icicle_up',
+			chance = 12,
+		},
+		surface_depth = 2,
+		underwater = true,
+	},
+}
+--]]
+
+
 if false then
 	local name = 'test_deco'
 	local seed = 20
@@ -55,112 +168,116 @@ end
 
 
 do
-	--[[
-    minetest.register_biome({
-        name = '',
-        node_dust = '',
-        node_top = '',
-        depth_top = 1,
-        node_filler = '',
-        depth_filler = 3,
-        node_stone = '',
-        node_water_top = '',
-        depth_water_top = 10,
-        node_water = '',
-        node_river_water = '',
-        node_riverbed = '',
-        depth_riverbed = 2,
-        node_cave_liquid = '',
-        node_dungeon = '',
-        node_dungeon_alt = '',
-        node_dungeon_stair = '',
-        y_max = 31000,
-        y_min = 1,
-        max_pos = { x = 31000, y = 128, z = 31000 },
-        min_pos = { x = -31000, y = 9, z = -31000 },
-        vertical_blend = 8,
-        heat_point = 0,
-        humidity_point = 50,
-    })
-	--]]
+	local rep = {
+		--[[
+		['rainforest_ocean'] = {
+			node_stone = mod_name..':stone_with_algae',
+		},
+		['deciduous_forest_ocean'] = {
+			node_stone = mod_name..':stone_with_lichen',
+		},
+		['coniferous_forest_ocean'] = {
+			node_stone = mod_name..':stone_with_moss',
+		},
+		['desert_ocean'] = {
+			node_stone = mod_name..':basalt',
+		},
+		['cold_desert_ocean'] = {
+			node_stone = mod_name..':granite',
+		},
+		--]]
+	}
+
+	local bio = {}
+	for n, d in pairs(minetest.registered_biomes) do
+		local b = table.copy(d)
+		for k, v in pairs(rep[n] or {}) do
+			b[k] = v
+		end
+		bio[n] = b
+	end
+	minetest.clear_registered_biomes()
+	for n, v in pairs(bio) do
+		if n ~= 'underground' then
+			minetest.register_biome(v)
+		end
+	end
 
     minetest.register_biome({
         name = 'stone',
-        --node_cave_liquid = '',
-        y_max = -20,
+		y_max = -20,
+		y_min = -31000,
         vertical_blend = 8,
         heat_point = 50,
         humidity_point = 25,
     })
 
     minetest.register_biome({
-        name = 'lichen',
-        node_lining = 'environ:stone_with_lichen',
-        --node_cave_liquid = '',
-        y_max = -20,
+        name = 'wet_stone',
+		y_max = -20,
+		y_min = -31000,
+        node_cave_liquid = 'default:water_source',
+        vertical_blend = 8,
+        heat_point = 100,
+        humidity_point = 75,
+    })
+
+    minetest.register_biome({
+        name = 'sea_cave',
+		y_max = -20,
+		y_min = -31000,
+        node_gas = 'default:water_source',
         vertical_blend = 8,
         heat_point = 50,
-        humidity_point = 50,
+        humidity_point = 100,
+    })
+
+    minetest.register_biome({
+        name = 'lichen',
+        node_lining = 'environ:stone_with_lichen',
+		y_max = -20,
+		y_min = -31000,
+        vertical_blend = 8,
+        heat_point = 25,
+        humidity_point = 40,
+    })
+
+    minetest.register_biome({
+        name = 'algae',
+        node_lining = 'environ:stone_with_algae',
+        node_cave_liquid = 'default:water_source',
+		y_max = -20,
+		y_min = -31000,
+        vertical_blend = 8,
+        heat_point = 75,
+        humidity_point = 75,
+    })
+
+    minetest.register_biome({
+        name = 'mossy',
+        node_lining = 'environ:stone_with_moss',
+        node_cave_liquid = 'default:water_source',
+		y_max = -20,
+		y_min = -31000,
+        vertical_blend = 8,
+        heat_point = 50,
+        humidity_point = 75,
+    })
+
+    minetest.register_biome({
+        name = 'granite_lava',
+        node_stone = mod_name..':granite',
+        node_cave_liquid = 'default:lava_source',
+		y_max = -20,
+		y_min = -31000,
+        vertical_blend = 8,
+        heat_point = 50,
+        humidity_point = 25,
     })
 end
 
 
 do
-	local cap = {
-	  description = 'Giant Mushroom Cap',
-	  tiles = { 'environ_mushroom_giant_cap.png', 'environ_mushroom_giant_under.png', 'environ_mushroom_giant_cap.png' },
-	  is_ground_content = false,
-	  paramtype = 'light',
-	  drawtype = 'nodebox',
-	  node_box = { type = 'fixed', 
-	  fixed = {
-		{ -0.3, -0.25, -0.3, 0.3, 0.5, 0.3 },
-		{ -0.3, -0.25, -0.4, 0.3, 0.4, -0.3 },
-		{ -0.3, -0.25, 0.3, 0.3, 0.4, 0.4 },
-		{ -0.4, -0.25, -0.3, -0.3, 0.4, 0.3 },
-		{ 0.3, -0.25, -0.3, 0.4, 0.4, 0.3 },
-		{ -0.4, -0.5, -0.4, 0.4, -0.25, 0.4 },
-		{ -0.5, -0.5, -0.4, -0.4, -0.25, 0.4 },
-		{ 0.4, -0.5, -0.4, 0.5, -0.25, 0.4 },
-		{ -0.4, -0.5, -0.5, 0.4, -0.25, -0.4 },
-		{ -0.4, -0.5, 0.4, 0.4, -0.25, 0.5 },
-	  } },
-	  light_source = 5,
-	  groups = { fleshy=1, dig_immediate=3, flammable=2, plant=1 },
-	}
-	minetest.register_node(mod_name..':giant_mushroom_cap', cap)
-
-	-- mushroom cap, huge
-	minetest.register_node(mod_name..':huge_mushroom_cap', {
-	  description = 'Huge Mushroom Cap',
-	  tiles = { 'environ_mushroom_giant_cap.png', 'environ_mushroom_giant_under.png', 'environ_mushroom_giant_cap.png' },
-	  is_ground_content = false,
-	  paramtype = 'light',
-	  drawtype = 'nodebox',
-	  node_box = { type = 'fixed', 
-	  fixed = {
-		{ -0.5, -0.5, -0.33, 0.5, -0.33, 0.33 }, 
-		{ -0.33, -0.5, 0.33, 0.33, -0.33, 0.5 }, 
-		{ -0.33, -0.5, -0.33, 0.33, -0.33, -0.5 }, 
-		{ -0.33, -0.33, -0.33, 0.33, -0.17, 0.33 }, 
-	  } },
-	  light_source = 5,
-	  groups = { fleshy=1, dig_immediate=3, flammable=2, plant=1 },
-	})
-
-	-- mushroom stem, giant or huge
-	minetest.register_node(mod_name..':giant_mushroom_stem', {
-	  description = 'Giant Mushroom Stem',
-	  tiles = { 'environ_mushroom_giant_stem.png', 'environ_mushroom_giant_stem.png', 'environ_mushroom_giant_stem.png' },
-	  is_ground_content = false,
-	  groups = { choppy=2, flammable=2,  plant=1 }, 
-	  sounds = default.node_sound_wood_defaults(),
-	  sunlight_propagates = true,
-	  paramtype = 'light',
-	  drawtype = 'nodebox',
-	  node_box = { type = 'fixed', fixed = { { -0.25, -0.5, -0.25, 0.25, 0.5, 0.25 }, } },
-	})
-
 	local huge_mushroom_sch = {
 		size = { x=1, y=3, z=1 },
 		data = {
@@ -183,7 +300,6 @@ do
 	minetest.register_decoration({
 		deco_type = 'schematic',
 		place_on = { 'group:natural_stone', },
-		height_max = 6,
 		sidelen = 16,
 		noise_params = {
 			offset = 0.015,
@@ -193,8 +309,7 @@ do
 			octaves = 3,
 			persist = 0.6
 		},
-		biomes = { 'stone', 'lichen', },
-		--y_max = -20,
+		biomes = { 'stone', 'algae', 'lichen', },
 		schematic = huge_mushroom_sch,
 		name = 'huge_mushroom',
 		flags = 'all_floors',
@@ -212,8 +327,7 @@ do
 			octaves = 3,
 			persist = 0.6
 		},
-		biomes = { 'stone', 'lichen', },
-		--y_max = -20,
+		biomes = { 'stone', 'algae', 'lichen', },
 		schematic = giant_mushroom_sch,
 		name = 'giant_mushroom',
 		flags = 'all_floors',
@@ -237,7 +351,6 @@ do
 		drawtype = 'plantlike',
 	})
 
-
 	minetest.register_decoration({
 		deco_type = 'simple',
 		place_on = { 'group:natural_stone', },
@@ -251,10 +364,66 @@ do
 			octaves = 3,
 			persist = 0.6
 		},
-		biomes = { 'stone', 'lichen', },
-		--y_max = 1,
+		biomes = { 'stone', 'algae', 'lichen', },
 		decoration = mod_name..':glow_worm',
 		name = 'glow_worm',
+		flags = 'all_ceilings',
+	})
+
+	minetest.register_decoration({
+		deco_type = 'simple',
+		place_on = { 'group:natural_stone', },
+		sidelen = 16,
+		noise_params = {
+			offset = 0.015,
+			scale = 0.025,
+			spread = { x = 200, y = 200, z = 200 },
+			seed = -18,
+			octaves = 3,
+			persist = 0.6
+		},
+		biomes = { 'sea_cave', 'wet_stone', 'moss', },
+		decoration = mod_name..':glowing_fungal_stone',
+		place_offset_y = -1,
+		name = 'glowing_fungal_stone',
+		flags = 'all_ceilings, all_floors',
+	})
+
+	minetest.register_decoration({
+		deco_type = 'simple',
+		place_on = { 'group:natural_stone', },
+		sidelen = 16,
+		noise_params = {
+			offset = 0.025,
+			scale = 0.025,
+			spread = { x = 200, y = 200, z = 200 },
+			seed = -10,
+			octaves = 3,
+			persist = 0.6
+		},
+		biomes = { 'sea_cave', },
+		decoration = mod_name..':glowing_fungal_stone',
+		place_offset_y = -1,
+		name = 'glowing_fungal_stone_wet',
+		flags = 'all_ceilings, all_floors, aquatic',
+	})
+
+	minetest.register_decoration({
+		deco_type = 'simple',
+		place_on = { mod_name..':granite', mod_name..':basalt', },
+		sidelen = 16,
+		noise_params = {
+			offset = 0,
+			scale = 0.02,
+			spread = { x = 200, y = 200, z = 200 },
+			seed = -13,
+			octaves = 3,
+			persist = 0.6
+		},
+		biomes = { 'granite_lava', 'basalt_lava', },
+		decoration = 'default:lava_source',
+		name = 'lava_flow',
+		place_offset_y = -1,  -- This fails in C.
 		flags = 'all_ceilings',
 	})
 end
@@ -511,23 +680,24 @@ local function register_flower(name, desc, biomes, seed)
 	groups.flower = 1
 	groups.flora = 1
 	groups.attached_node = 1
+	local img = mod_name .. '_' .. name .. '.png'
 
-	minetest.register_node(mod_name..":" .. name, {
+	minetest.register_node(mod_name..':' .. name, {
 		description = desc,
-		drawtype = "plantlike",
+		drawtype = 'plantlike',
 		waving = 1,
-		tiles = { name .. ".png" },
-		inventory_image = name .. ".png",
-		wield_image = name .. ".png",
+		tiles = { img },
+		inventory_image = img,
+		wield_image = img,
 		sunlight_propagates = true,
-		paramtype = "light",
+		paramtype = 'light',
 		walkable = false,
 		buildable_to = true,
 		stack_max = 99,
 		groups = groups,
 		sounds = default.node_sound_leaves_defaults(),
 		selection_box = {
-			type = "fixed",
+			type = 'fixed',
 			fixed = { -0.5, -0.5, -0.5, 0.5, -5/16, 0.5 },
 		}
 	})
@@ -542,7 +712,7 @@ local function register_flower(name, desc, biomes, seed)
 
 	if bi['rainforest'] then
 		local def = {
-			deco_type = "simple",
+			deco_type = 'simple',
 			place_on = { 'default:dirt_with_rainforest_litter' },
 			sidelen = 16,
 			noise_params = {
@@ -556,35 +726,35 @@ local function register_flower(name, desc, biomes, seed)
 			biomes = { 'rainforest', 'rainforest_swamp' },
 			y_min = 1,
 			y_max = 31000,
-			decoration = mod_name..":"..name,
-			name = name,
-			flower = true,
-		}
-		minetest.register_decoration(def)
-	else
-		local def = {
-			deco_type = "simple",
-			place_on = { "default:dirt_with_grass", "default:dirt_with_dry_grass", 'default:dirt_with_rainforest_litter' },
-			sidelen = 16,
-			noise_params = {
-				offset = -0.015,
-				scale = 0.025,
-				spread = { x = 200, y = 200, z = 200 },
-				seed = seed,
-				octaves = 3,
-				persist = 0.6
-			},
-			biomes = biomes,
-			y_min = 1,
-			y_max = 31000,
-			decoration = mod_name..":"..name,
+			decoration = mod_name..':'..name,
 			name = name,
 			flower = true,
 		}
 		minetest.register_decoration(def)
 	end
+
+	local def = {
+		deco_type = 'simple',
+		place_on = { 'default:dirt_with_grass', 'default:dirt_with_dry_grass', 'default:dirt_with_rainforest_litter' },
+		sidelen = 16,
+		noise_params = {
+			offset = -0.015,
+			scale = 0.025,
+			spread = { x = 200, y = 200, z = 200 },
+			seed = seed,
+			octaves = 3,
+			persist = 0.6
+		},
+		biomes = biomes,
+		y_min = 1,
+		y_max = 31000,
+		decoration = mod_name..':'..name,
+		name = name,
+		flower = true,
+	}
+	minetest.register_decoration(def)
 end
 
-register_flower("orchid", "Orchid", { "rainforest", "rainforest_swamp" }, 783)
-register_flower("bird_of_paradise", "Bird of Paradise", { "rainforest" }, 798)
-register_flower("gerbera", "Gerbera", { "savanna", "rainforest" }, 911)
+register_flower('orchid', 'Orchid', { 'rainforest', 'rainforest_swamp' }, 783)
+register_flower('bird_of_paradise', 'Bird of Paradise', { 'rainforest' }, 798)
+register_flower('gerbera', 'Gerbera', { 'savanna', 'rainforest' }, 911)
