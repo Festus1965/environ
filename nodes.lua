@@ -84,6 +84,26 @@ do
 	})
 	minetest.register_node(mod_name..':stone_with_moss', newnode)
 
+	-- salt
+	minetest.register_node(mod_name..':stone_with_salt', {
+		description = 'Cave Stone with Salt',
+		tiles = { 'environ_salt.png' },
+		paramtype = 'light',
+		use_texture_alpha = true,
+		drawtype = 'glasslike',
+		sunlight_propagates = false,
+		is_ground_content = true,
+		groups = { stone = 1, crumbly = 3, cracky = 3 },
+		sounds = default.node_sound_glass_defaults(),
+	})
+
+	-- salt, radioactive ore
+	newnode = clone_node(mod_name..':stone_with_salt')
+	newnode.description = 'Salt With Radioactive Ore'
+	newnode.tiles = { 'environ_radioactive_ore.png' }
+	newnode.light_source = 5
+	minetest.register_node(mod_name..':radioactive_ore', newnode)
+
 	minetest.register_node(mod_name..':glowing_fungal_stone', {
 		description = 'Glowing Fungal Stone',
 		tiles = { 'default_stone.png^environ_glowing_fungal.png', },
@@ -242,26 +262,6 @@ do
 	--mod.add_construct(mod_name..':will_o_wisp_glow')
 	--mod.add_construct(mod_name..':will_o_wisp_dark')
 
-
-	-- salt
-	minetest.register_node(mod_name..':stone_with_salt', {
-		description = 'Cave Stone with Salt',
-		tiles = { 'salt.png' },
-		paramtype = 'light',
-		use_texture_alpha = true,
-		drawtype = 'glasslike',
-		sunlight_propagates = false,
-		is_ground_content = true,
-		groups = { stone = 1, crumbly = 3, cracky = 3 },
-		sounds = default.node_sound_glass_defaults(),
-	})
-
-	-- salt, radioactive ore
-	newnode = clone_node(mod_name..':stone_with_salt')
-	newnode.description = 'Salt With Radioactive Ore'
-	newnode.tiles = { 'radioactive_ore.png' }
-	newnode.light_source = 5
-	minetest.register_node(mod_name..':radioactive_ore', newnode)
 
 	---- ice, thin -- transparent
 	--minetest.register_node(mod_name..':thin_ice', {

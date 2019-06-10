@@ -30,25 +30,6 @@ dofile(mod.path..'/nodes.lua')
 --[[
 mod.cave_biomes = {
 	{
-		name = 'granite',
-		stalagmite = {
-			node = 'default:torch',
-			chance = 50,
-			param2 = 1,
-		},
-		stone_type = mod_name..':granite',
-		underwater = true,
-	},
-	{
-		name = 'salt',
-		ceiling_node = mod_name..':stone_with_salt',
-		deco = mod_name..':radioactive_ore',
-		deco_chance = 100,
-		floor_node = mod_name..':stone_with_salt',
-		surface_depth = 2,
-		underwater = false,
-	},
-	{
 		name = 'basalt',
 		stalagmite = {
 			node = 'default:torch',
@@ -207,7 +188,6 @@ do
         name = 'stone',
 		y_max = -20,
 		y_min = -31000,
-        vertical_blend = 8,
         heat_point = 50,
         humidity_point = 25,
     })
@@ -217,7 +197,6 @@ do
 		y_max = -20,
 		y_min = -31000,
         node_cave_liquid = 'default:water_source',
-        vertical_blend = 8,
         heat_point = 100,
         humidity_point = 75,
     })
@@ -227,7 +206,6 @@ do
 		y_max = -20,
 		y_min = -31000,
         node_gas = 'default:water_source',
-        vertical_blend = 8,
         heat_point = 50,
         humidity_point = 100,
     })
@@ -237,7 +215,6 @@ do
         node_lining = 'environ:stone_with_lichen',
 		y_max = -20,
 		y_min = -31000,
-        vertical_blend = 8,
         heat_point = 25,
         humidity_point = 40,
     })
@@ -248,7 +225,6 @@ do
         node_cave_liquid = 'default:water_source',
 		y_max = -20,
 		y_min = -31000,
-        vertical_blend = 8,
         heat_point = 75,
         humidity_point = 75,
     })
@@ -259,7 +235,6 @@ do
         node_cave_liquid = 'default:water_source',
 		y_max = -20,
 		y_min = -31000,
-        vertical_blend = 8,
         heat_point = 50,
         humidity_point = 75,
     })
@@ -270,9 +245,18 @@ do
         node_cave_liquid = 'default:lava_source',
 		y_max = -20,
 		y_min = -31000,
-        vertical_blend = 8,
         heat_point = 50,
         humidity_point = 25,
+    })
+
+    minetest.register_biome({
+        name = 'salt',
+        node_lining = mod_name..':stone_with_salt',
+		surface_depth = 2,
+		y_max = -20,
+		y_min = -31000,
+        heat_point = 70,
+        humidity_point = 0,
     })
 end
 
