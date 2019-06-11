@@ -238,15 +238,6 @@ do
         heat_point = 50,
         humidity_point = 30,
     })
-	{
-		name = 'sand',
-		ceiling_node = 'default:sandstone',
-		floor_node = 'default:sand',
-		deco = mod_name..':phosph_sand',
-		deco_chance = 30,
-		surface_depth = 2,
-		underwater = true,
-	},
 
     minetest.register_biome({
         name = 'sand',
