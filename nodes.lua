@@ -114,6 +114,19 @@ do
 		sounds = default.node_sound_stone_defaults(),
 	})
 
+	minetest.register_node(mod_name..':glowing_gem', {
+		description = 'Glowing gems',
+		tiles = { 'environ_glowing_gem.png', },
+		is_ground_content = true,
+		paramtype = 'light',
+		use_texture_alpha = true,
+		drawtype = 'glasslike',
+		light_source = 5,
+		groups = { cracky = 3, stone = 1 },
+		--drop = { items = { { items = { 'default:cobble' }, }, { items = { mod_name..':glowing_fungus', }, }, }, },
+		sounds = default.node_sound_stone_defaults(),
+	})
+
 	-- Glowing fungus grows underground.
 	minetest.register_craftitem(mod_name..':glowing_fungus', {
 		description = 'Glowing Fungus',

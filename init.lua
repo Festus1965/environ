@@ -27,27 +27,27 @@ local clone_node = mod.clone_node
 dofile(mod.path..'/nodes.lua')
 
 
+if not minetest.clear_craft({
+	recipe = {
+		{"default:copper_ingot", "default:copper_ingot", "default:copper_ingot"},
+		{"default:copper_ingot", "default:tin_ingot", "default:copper_ingot"},
+		{"default:copper_ingot", "default:copper_ingot", "default:copper_ingot"},
+	}
+}) then
+	print('Can\'t find recipe!!!!!!!')
+end
+minetest.register_craft({
+	type = 'shapeless',
+	output = 'default:bronze_ingot',
+	recipe = {
+		'default:tin_ingot',
+		'default:copper_ingot',
+	},
+})
+
+
 --[[
 mod.cave_biomes = {
-	{
-		name = 'basalt',
-		stalagmite = {
-			node = 'default:torch',
-			chance = 50,
-			param2 = 1,
-		},
-		stone_type = mod_name..':basalt',
-		underwater = true,
-	},
-	{
-		name = 'sand',
-		ceiling_node = 'default:sandstone',
-		floor_node = 'default:sand',
-		deco = mod_name..':phosph_sand',
-		deco_chance = 30,
-		surface_depth = 2,
-		underwater = true,
-	},
 	{
 		name = 'coal',
 		ceiling_node = mod_name..':black_sand',
@@ -184,6 +184,7 @@ do
 		end
 	end
 
+	--[[
     minetest.register_biome({
         name = 'stone',
 		y_max = -20,
@@ -252,6 +253,36 @@ do
     minetest.register_biome({
         name = 'salt',
         node_lining = mod_name..':stone_with_salt',
+		surface_depth = 2,
+		y_max = -20,
+		y_min = -31000,
+        heat_point = 70,
+        humidity_point = 0,
+    })
+
+    minetest.register_biome({
+        name = 'basalt',
+        node_lining = mod_name..':basalt',
+		y_max = -20,
+		y_min = -31000,
+        heat_point = 50,
+        humidity_point = 30,
+    })
+	{
+		name = 'sand',
+		ceiling_node = 'default:sandstone',
+		floor_node = 'default:sand',
+		deco = mod_name..':phosph_sand',
+		deco_chance = 30,
+		surface_depth = 2,
+		underwater = true,
+	},
+	--]]
+
+    minetest.register_biome({
+        name = 'sand',
+        node_ceiling = 'default:sandstone',
+        node_floor = 'default:sand',
 		surface_depth = 2,
 		y_max = -20,
 		y_min = -31000,
@@ -371,6 +402,24 @@ do
 		place_offset_y = -1,
 		name = 'glowing_fungal_stone',
 		flags = 'all_ceilings, all_floors',
+	})
+
+	minetest.register_decoration({
+		deco_type = 'simple',
+		place_on = { 'group:sand', },
+		sidelen = 16,
+		noise_params = {
+			offset = 0.015,
+			scale = 0.025,
+			spread = { x = 200, y = 200, z = 200 },
+			seed = -17,
+			octaves = 3,
+			persist = 0.6
+		},
+		biomes = { 'sand', },
+		decoration = mod_name..':glowing_gem',
+		name = 'glowing_gem',
+		flags = 'all_floors',
 	})
 
 	minetest.register_decoration({
