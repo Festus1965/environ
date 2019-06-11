@@ -27,15 +27,13 @@ local clone_node = mod.clone_node
 dofile(mod.path..'/nodes.lua')
 
 
-if not minetest.clear_craft({
+minetest.clear_craft({
 	recipe = {
 		{"default:copper_ingot", "default:copper_ingot", "default:copper_ingot"},
 		{"default:copper_ingot", "default:tin_ingot", "default:copper_ingot"},
 		{"default:copper_ingot", "default:copper_ingot", "default:copper_ingot"},
 	}
-}) then
-	print('Can\'t find recipe!!!!!!!')
-end
+})
 minetest.register_craft({
 	type = 'shapeless',
 	output = 'default:bronze_ingot',
@@ -121,33 +119,6 @@ mod.cave_biomes = {
 --]]
 
 
-if false then
-	local name = 'test_deco'
-	local seed = 20
-	local def = {
-		deco_type = 'simple',
-		place_on = { 'default:stone' },
-		sidelen = 16,
-		noise_params = {
-			offset = 0.015,
-			scale = 0.025,
-			spread = { x = 200, y = 200, z = 200 },
-			seed = seed,
-			octaves = 3,
-			persist = 0.6
-		},
-		--biomes = { 'rainforest', 'rainforest_swamp' },
-		--y_min = 1,
-		--y_max = 31000,
-		--decoration = mod_name..':'..name,
-		decoration = 'default:meselamp',
-		name = name,
-		flags = 'all_floors,all_ceilings',
-	}
-	minetest.register_decoration(def)
-end
-
-
 do
 	local rep = {
 		--[[
@@ -184,7 +155,6 @@ do
 		end
 	end
 
-	--[[
     minetest.register_biome({
         name = 'stone',
 		y_max = -20,
@@ -277,7 +247,6 @@ do
 		surface_depth = 2,
 		underwater = true,
 	},
-	--]]
 
     minetest.register_biome({
         name = 'sand',
