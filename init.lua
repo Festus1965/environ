@@ -90,10 +90,9 @@ do
 		end
 	end
 
-	--[[
     register_biome({
         name = 'stone',
-		y_max = -20,
+		y_max = singl and -20 or -134,
 		y_min = -31000,
         heat_point = 30,
         humidity_point = 50,
@@ -101,7 +100,7 @@ do
 
     register_biome({
         name = 'wet_stone',
-		y_max = -20,
+		y_max = singl and -20 or -134,
 		y_min = -31000,
         node_cave_liquid = 'default:water_source',
         heat_point = 100,
@@ -110,7 +109,7 @@ do
 
     register_biome({
         name = 'sea_cave',
-		y_max = -20,
+		y_max = singl and -20 or -134,
 		y_min = -31000,
         node_gas = 'default:water_source',
         heat_point = 50,
@@ -120,7 +119,7 @@ do
     register_biome({
         name = 'lichen',
         node_lining = 'environ:stone_with_lichen',
-		y_max = -20,
+		y_max = singl and -20 or -134,
 		y_min = -31000,
         heat_point = 15,
         humidity_point = 20,
@@ -130,7 +129,7 @@ do
         name = 'algae',
         node_lining = 'environ:stone_with_algae',
         node_cave_liquid = 'default:water_source',
-		y_max = -20,
+		y_max = singl and -20 or -134,
 		y_min = -31000,
         heat_point = 65,
         humidity_point = 75,
@@ -140,7 +139,7 @@ do
         name = 'mossy',
         node_lining = 'environ:stone_with_moss',
         node_cave_liquid = 'default:water_source',
-		y_max = -20,
+		y_max = singl and -20 or -134,
 		y_min = -31000,
         heat_point = 25,
         humidity_point = 75,
@@ -150,7 +149,7 @@ do
         name = 'granite_lava',
         node_stone = mod_name..':granite',
         node_cave_liquid = 'default:lava_source',
-		y_max = -20,
+		y_max = singl and -20 or -134,
 		y_min = -31000,
         heat_point = 105,
         humidity_point = 70,
@@ -160,7 +159,7 @@ do
         name = 'salt',
         node_lining = mod_name..':stone_with_salt',
 		surface_depth = 2,
-		y_max = -20,
+		y_max = singl and -20 or -134,
 		y_min = -31000,
         heat_point = 50,
         humidity_point = -5,
@@ -169,7 +168,7 @@ do
     register_biome({
         name = 'basalt',
         node_lining = mod_name..':basalt',
-		y_max = -20,
+		y_max = singl and -20 or -134,
 		y_min = -31000,
         heat_point = 60,
         humidity_point = 50,
@@ -180,7 +179,7 @@ do
         node_ceiling = 'default:sandstone',
         node_floor = 'default:sand',
 		surface_depth = 2,
-		y_max = -20,
+		y_max = singl and -20 or -134,
 		y_min = -31000,
         heat_point = 70,
         humidity_point = 25,
@@ -191,19 +190,18 @@ do
         node_lining = mod_name..':black_sand',
 		stone_type = mod_name..':basalt',
 		surface_depth = 2,
-		y_max = -20,
+		y_max = singl and -20 or -134,
 		y_min = -31000,
         heat_point = 110,
         humidity_point = 0,
     })
-	--]]
 
     register_biome({
         name = 'hot',
         node_floor = mod_name..':hot_rock',
 		stone_type = mod_name..':granite',
         node_cave_liquid = 'default:lava_source',
-		y_max = -20,
+		y_max = singl and -20 or -134,
 		y_min = -31000,
         heat_point = 120,
         humidity_point = 35,
@@ -214,7 +212,7 @@ do
         name = 'ice',
         node_lining = 'default:ice',
 		surface_depth = 4,
-		y_max = -20,
+		y_max = singl and -20 or -134,
 		y_min = -31000,
         heat_point = -15,
         humidity_point = 50,
