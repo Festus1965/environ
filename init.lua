@@ -44,79 +44,14 @@ minetest.register_craft({
 })
 
 
---[[
-mod.cave_biomes = {
-	{
-		name = 'coal',
-		ceiling_node = mod_name..':black_sand',
-		deco = 'default:coalblock',
-		deco_chance = 100,
-		floor_node = mod_name..':black_sand',
-		stalagmite = {
-			node = 'fire:permanent_flame',
-			chance = 50,
-		},
-		stone_type = mod_name..':basalt',
-		surface_depth = 2,
-	},
-	{
-		name = 'lichen_dead',
-		ceiling_node = mod_name..':stone_with_lichen',
-		floor_node = mod_name..':stone_with_lichen',
-		gas = mod_name..':inert_gas',
-		stalactite = {
-			node = mod_name..':stalactite',
-			chance = 12,
-		},
-		stalagmite = {
-			node = {mod_name..':will_o_wisp_glow', mod_name..':stalagmite'},
-			chance = 50,
-		},
-		surface_depth = 1,
-		--underwater = true,
-	},
-	{
-		name = 'hell',
-		fluid = 'default:lava_source',
-		schematics = { { schematic = mod.schematics['hell_tree'], chance = 150 }, },
-		stalagmite = {
-			node = mod_name..':bound_spirit',
-			chance = 20,
-		},
-		stone_type = mod_name..':basalt',
-	},
-	{
-		name = 'hot',
-		ceiling_node = mod_name..':hot_rock',
-		floor_node = mod_name..':hot_rock',
-		fluid = 'default:lava_source',
-		stalagmite = {
-			node = mod.hot_spikes,
-			chance = 50,
-		},
-		stone_type = mod_name..':granite',
-		surface_depth = 1,
-		underwater = false,
-	},
-	{
-		name = 'ice',
-		ceiling_node = 'default:ice',
-		deco = mod_name..':will_o_wisp_glow',
-		deco_chance = 200,
-		floor_node = 'default:ice',
-		stalactite = {
-			node = mod_name..':icicle_down',
-			chance = 12,
-		},
-		stalagmite = {
-			node = mod_name..':icicle_up',
-			chance = 12,
-		},
-		surface_depth = 2,
-		underwater = true,
-	},
-}
---]]
+local singl = (minetest.get_mapgen_setting('mg_name') == 'singlenode')
+local function register_biome(def)
+	if not singl then
+		def.node_stone = (def.node_lining or def.node_ceiling or def.node_stone or nil)
+	end
+
+	minetest.register_biome(def)
+end
 
 
 do
@@ -155,91 +90,92 @@ do
 		end
 	end
 
-    minetest.register_biome({
+	--[[
+    register_biome({
         name = 'stone',
 		y_max = -20,
 		y_min = -31000,
-        heat_point = 50,
-        humidity_point = 25,
+        heat_point = 30,
+        humidity_point = 50,
     })
 
-    minetest.register_biome({
+    register_biome({
         name = 'wet_stone',
 		y_max = -20,
 		y_min = -31000,
         node_cave_liquid = 'default:water_source',
         heat_point = 100,
-        humidity_point = 75,
+        humidity_point = 100,
     })
 
-    minetest.register_biome({
+    register_biome({
         name = 'sea_cave',
 		y_max = -20,
 		y_min = -31000,
         node_gas = 'default:water_source',
         heat_point = 50,
-        humidity_point = 100,
+        humidity_point = 115,
     })
 
-    minetest.register_biome({
+    register_biome({
         name = 'lichen',
         node_lining = 'environ:stone_with_lichen',
 		y_max = -20,
 		y_min = -31000,
-        heat_point = 25,
-        humidity_point = 40,
+        heat_point = 15,
+        humidity_point = 20,
     })
 
-    minetest.register_biome({
+    register_biome({
         name = 'algae',
         node_lining = 'environ:stone_with_algae',
         node_cave_liquid = 'default:water_source',
 		y_max = -20,
 		y_min = -31000,
-        heat_point = 75,
+        heat_point = 65,
         humidity_point = 75,
     })
 
-    minetest.register_biome({
+    register_biome({
         name = 'mossy',
         node_lining = 'environ:stone_with_moss',
         node_cave_liquid = 'default:water_source',
 		y_max = -20,
 		y_min = -31000,
-        heat_point = 50,
+        heat_point = 25,
         humidity_point = 75,
     })
 
-    minetest.register_biome({
+    register_biome({
         name = 'granite_lava',
         node_stone = mod_name..':granite',
         node_cave_liquid = 'default:lava_source',
 		y_max = -20,
 		y_min = -31000,
-        heat_point = 50,
-        humidity_point = 25,
+        heat_point = 105,
+        humidity_point = 70,
     })
 
-    minetest.register_biome({
+    register_biome({
         name = 'salt',
         node_lining = mod_name..':stone_with_salt',
 		surface_depth = 2,
 		y_max = -20,
 		y_min = -31000,
-        heat_point = 70,
-        humidity_point = 0,
+        heat_point = 50,
+        humidity_point = -5,
     })
 
-    minetest.register_biome({
+    register_biome({
         name = 'basalt',
         node_lining = mod_name..':basalt',
 		y_max = -20,
 		y_min = -31000,
-        heat_point = 50,
-        humidity_point = 30,
+        heat_point = 60,
+        humidity_point = 50,
     })
 
-    minetest.register_biome({
+    register_biome({
         name = 'sand',
         node_ceiling = 'default:sandstone',
         node_floor = 'default:sand',
@@ -247,7 +183,41 @@ do
 		y_max = -20,
 		y_min = -31000,
         heat_point = 70,
+        humidity_point = 25,
+    })
+
+    register_biome({
+        name = 'coal',
+        node_lining = mod_name..':black_sand',
+		stone_type = mod_name..':basalt',
+		surface_depth = 2,
+		y_max = -20,
+		y_min = -31000,
+        heat_point = 110,
         humidity_point = 0,
+    })
+	--]]
+
+    register_biome({
+        name = 'hot',
+        node_floor = mod_name..':hot_rock',
+		stone_type = mod_name..':granite',
+        node_cave_liquid = 'default:lava_source',
+		y_max = -20,
+		y_min = -31000,
+        heat_point = 120,
+        humidity_point = 35,
+    })
+
+    register_biome({
+		--deco = mod_name..':will_o_wisp_glow',
+        name = 'ice',
+        node_lining = 'default:ice',
+		surface_depth = 4,
+		y_max = -20,
+		y_min = -31000,
+        heat_point = -15,
+        humidity_point = 50,
     })
 end
 
@@ -376,7 +346,7 @@ do
 			octaves = 3,
 			persist = 0.6
 		},
-		biomes = { 'sand', },
+		biomes = { 'sand', 'sandstone', },
 		decoration = mod_name..':glowing_gem',
 		name = 'glowing_gem',
 		flags = 'all_floors',
@@ -418,6 +388,53 @@ do
 		name = 'lava_flow',
 		place_offset_y = -1,  -- This fails in C.
 		flags = 'all_ceilings',
+	})
+
+	minetest.register_decoration({
+		deco_type = 'simple',
+		place_on = { mod_name..':black_sand', },
+		sidelen = 16,
+		noise_params = {
+			offset = 0.02,
+			scale = 0.04,
+			spread = { x = 200, y = 200, z = 200 },
+			seed = -70,
+			octaves = 3,
+			persist = 0.6
+		},
+		biomes = { 'coal', },
+		decoration = 'fire:permanent_flame',
+		name = 'Gas Flame',
+		flags = 'all_floors',
+	})
+
+	minetest.register_decoration({
+		deco_type = 'simple',
+		place_on = { mod_name..':black_sand', },
+		sidelen = 16,
+		fill_ratio = 0.04,
+		place_offset_y = -1,
+		biomes = { 'coal', },
+		decoration = 'default:coalblock',
+		name = 'Coal Seam',
+		flags = 'all_floors, all_ceilings',
+	})
+
+	minetest.register_decoration({
+		deco_type = 'simple',
+		place_on = { mod_name..':hot_rock', },
+		sidelen = 16,
+		fill_ratio = 0.04,
+		biomes = { 'hot', },
+		decoration = {
+			mod_name..':hot_spike',
+			mod_name..':hot_spike_2',
+			mod_name..':hot_spike_3',
+			mod_name..':hot_spike_4',
+			mod_name..':hot_spike_5',
+		},
+		name = 'Hot Spike',
+		flags = 'all_floors',
 	})
 end
 
@@ -570,6 +587,12 @@ do
 		if v and name:find(':apple_tree') then
 			v.noise_params.offset = v.noise_params.offset - 0.013
 			apple_deco = v
+		end
+		if v and name:find(':corals') then
+			v.flags = v.flags .. ', aquatic'
+		end
+		if v and name:find(':kelp') then
+			v.flags = v.flags .. ', aquatic'
 		end
 	end
 

@@ -9,6 +9,8 @@ local clone_node = mod.clone_node
 local newnode
 local light_max = 10
 
+local singl = (minetest.get_mapgen_setting('mg_name') == 'singlenode')
+
 
 do
 	for k, v in pairs(minetest.registered_nodes) do
@@ -89,7 +91,7 @@ do
 		description = 'Cave Stone with Salt',
 		tiles = { 'environ_salt.png' },
 		paramtype = 'light',
-		use_texture_alpha = true,
+		use_texture_alpha = singl,
 		drawtype = 'glasslike',
 		sunlight_propagates = false,
 		is_ground_content = true,
@@ -125,6 +127,28 @@ do
 		groups = { cracky = 3, stone = 1 },
 		--drop = { items = { { items = { 'default:cobble' }, }, { items = { mod_name..':glowing_fungus', }, }, }, },
 		sounds = default.node_sound_stone_defaults(),
+	})
+
+	-- black (oily) sand
+	newnode = clone_node('default:sand')
+	newnode.description = 'Black Sand'
+	newnode.tiles = { 'environ_black_sand.png' }
+	newnode.groups['falling_node'] = 0
+	minetest.register_node(mod_name..':black_sand', newnode)
+
+	-- rocks, hot
+	minetest.register_node(mod_name..':hot_rock', {
+		description = 'Hot Rocks',
+		--tiles = { 'environ_hot_rock.png' },
+		tiles = { 'default_cobble.png^[colorize:#990000:100' },
+		--tiles = { 'default_desert_stone.png^[colorize:#FF0000:50' },
+		is_ground_content = true,
+		groups = { crumbly = 2, surface_hot = 3 },
+		--light_source = 5,
+		damage_per_second = 1,
+		sounds = default.node_sound_stone_defaults({
+			footstep = { name = 'default_stone_footstep', gain = 0.25 },
+		}),
 	})
 
 	-- Glowing fungus grows underground.
@@ -208,21 +232,48 @@ do
 	})
 
 
+	-- spikes, hot -- silicon-based life
+	local spike_size = { 1.0, 1.2, 1.4, 1.6, 1.7 }
+	mod.hot_spikes = { }
+
+	for i in ipairs(spike_size) do
+		if i == 1 then
+			nodename = mod_name..':hot_spike'
+		else
+			nodename = mod_name..':hot_spike_'..i
+		end
+
+		table.insert(mod.hot_spikes, nodename)
+
+		vs = spike_size[i]
+
+		minetest.register_node(nodename, {
+			description = 'Stone Spike',
+			tiles = { 'environ_hot_spike.png' },
+			is_ground_content = true,
+			groups = { cracky = 3, oddly_breakable_by_hand = 1, surface_hot = 3 },
+			damage_per_second = 1,
+			sounds = default.node_sound_stone_defaults(),
+			paramtype = 'light',
+			drawtype = 'plantlike',
+			walkable = false,
+			light_source = i * 2 + 2,
+			buildable_to = true,
+			visual_scale = vs,
+			selection_box = {
+				type = 'fixed',
+				fixed = { -0.5*vs, -0.5*vs, -0.5*vs, 0.5*vs, -5/16*vs, 0.5*vs },
+			}
+		})
+	end
+
+	mod.hot_spike = { }
+	for i = 1, #mod.hot_spikes do
+		mod.hot_spike[mod.hot_spikes[i] ] = i
+	end
+
+
 	--[[
-	-- black (oily) sand
-	newnode = clone_node('default:sand')
-	newnode.description = 'Black Sand'
-	newnode.tiles = { 'environ_black_sand.png' }
-	newnode.groups['falling_node'] = 0
-	minetest.register_node(mod_name..':black_sand', newnode)
-
-	newnode = clone_node('default:sand')
-	newnode.description = 'Phosphorescent Sand'
-	newnode.groups['falling_node'] = 0
-	newnode.drop = 'default:sand'
-	newnode.light_source = 1
-	minetest.register_node(mod_name..':phosph_sand', newnode)
-
 	register_node_and_alias('will_o_wisp_glow', {
 		description = 'Will-o-wisp',
 		drawtype = 'plantlike',
@@ -276,94 +327,10 @@ do
 	--mod.add_construct(mod_name..':will_o_wisp_dark')
 
 
-	---- ice, thin -- transparent
-	--minetest.register_node(mod_name..':thin_ice', {
-	--	description = 'Thin Ice',
-	--	tiles = { 'caverealms_thin_ice.png' },
-	--	is_ground_content = true,
-	--	groups = { cracky = 3 },
-	--	sounds = default.node_sound_glass_defaults(),
-	--	use_texture_alpha = true,
-	--	light_source = 1,
-	--	drawtype = 'glasslike',
-	--	sunlight_propagates = true,
-	--	freezemelt = 'default:water_source',
-	--	paramtype = 'light',
-	-- })
-
-	-- stone, hot
-	minetest.register_node(mod_name..':hot_stone', {
-		description = 'Hot Stone',
-		tiles = { 'default_desert_stone.png^[colorize:#FF0000:150' },
-		is_ground_content = true,
-		groups = { crumbly = 2, surface_hot = 3 },
-		light_source = light_max - 5,
-		damage_per_second = 1,
-		sounds = default.node_sound_stone_defaults({
-			footstep = { name = 'default_stone_footstep', gain = 0.25 },
-		}),
-	})
-
-	-- rocks, hot
-	minetest.register_node(mod_name..':hot_rock', {
-		description = 'Hot Rocks',
-		tiles = { 'hot_rock.png' },
-		is_ground_content = true,
-		groups = { crumbly = 2, surface_hot = 3 },
-		light_source = 2,
-		damage_per_second = 1,
-		sounds = default.node_sound_stone_defaults({
-			footstep = { name = 'default_stone_footstep', gain = 0.25 },
-		}),
-	})
-
 
 	newnode = clone_node('air')
 	newnode.drowning = 1
 	minetest.register_node(mod_name..':inert_gas', newnode)
-
-
-	-- spikes, hot -- silicon-based life
-	local spike_size = { 1.0, 1.2, 1.4, 1.6, 1.7 }
-	mod.hot_spikes = { }
-
-	for i in ipairs(spike_size) do
-		if i == 1 then
-			nodename = mod_name..':hot_spike'
-		else
-			nodename = mod_name..':hot_spike_'..i
-		end
-
-		table.insert(mod.hot_spikes, nodename)
-
-		vs = spike_size[i]
-
-		minetest.register_node(nodename, {
-			description = 'Stone Spike',
-			tiles = { 'hot_spike.png' },
-			inventory_image = 'hot_spike.png',
-			wield_image = 'hot_spike.png',
-			is_ground_content = true,
-			groups = { cracky = 3, oddly_breakable_by_hand = 1, surface_hot = 3 },
-			damage_per_second = 1,
-			sounds = default.node_sound_stone_defaults(),
-			paramtype = 'light',
-			drawtype = 'plantlike',
-			walkable = false,
-			light_source = i * 2,
-			buildable_to = true,
-			visual_scale = vs,
-			selection_box = {
-				type = 'fixed',
-				fixed = { -0.5*vs, -0.5*vs, -0.5*vs, 0.5*vs, -5/16*vs, 0.5*vs },
-			}
-		})
-	end
-
-	mod.hot_spike = { }
-	for i = 1, #mod.hot_spikes do
-		mod.hot_spike[mod.hot_spikes[i] ] = i
-	end
 
 
 	-- kelp-like water plant?
@@ -387,7 +354,7 @@ do
 		{ stalac = 'stalactite_mossy', stalag = 'stalagmite_mossy', tile = 'default_stone.png^environ_moss.png', light = light_max-6, place_on = { mod_name..':stone_with_moss' }, biomes = { 'mossy' }, },
 		{ stalac = 'stalactite_lichen', stalag = 'stalagmite_lichen', tile = 'default_stone.png^environ_lichen.png', light = light_max-6, place_on = { mod_name..':stone_with_lichen' }, biomes = { 'lichen' }, },
 		--{ stalac = 'stalactite_crystal', stalag = 'stalagmite_crystal', tile = 'environ_radioactive_ore', light = light_max },
-		--{ stalac = 'icicle_down', stalag = 'icicle_up', desc = 'Icicle', tile = 'default_ice.png', drop = 'default:ice' },
+		{ stalac = 'icicle_down', stalag = 'icicle_up', desc = 'Icicle', tile = 'default_ice.png', drop = 'default:ice', place_on = { 'default:ice' }, biomes = { 'ice', }, },
 	}
 
 	for _, desc in pairs(spel) do
