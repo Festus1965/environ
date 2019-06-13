@@ -29,9 +29,9 @@ dofile(mod.path..'/nodes.lua')
 
 minetest.clear_craft({
 	recipe = {
-		{"default:copper_ingot", "default:copper_ingot", "default:copper_ingot"},
-		{"default:copper_ingot", "default:tin_ingot", "default:copper_ingot"},
-		{"default:copper_ingot", "default:copper_ingot", "default:copper_ingot"},
+		{'default:copper_ingot', 'default:copper_ingot', 'default:copper_ingot'},
+		{'default:copper_ingot', 'default:tin_ingot', 'default:copper_ingot'},
+		{'default:copper_ingot', 'default:copper_ingot', 'default:copper_ingot'},
 	}
 })
 minetest.register_craft({
@@ -437,6 +437,8 @@ do
 end
 
 
+dofile(mod.path..'/leaf_decay.lua')
+
 do
 	newnode = clone_node('default:apple')
 	newnode.tiles = { 'environ_orange.png' }
@@ -498,6 +500,42 @@ do
 	--newnode.inventory_image = 'moretrees_coconut.png'
 	--newnode.after_place_node = nil
 	--minetest.register_node(mod_name..':coconut', newnode)
+
+
+	mod.register_leafdecay({
+		trunks = {'default:jungletree'},
+		leaves = {
+			'default:jungleleaves',
+			mod_name..':jungleleaves_alt_1',
+			mod_name..':jungleleaves_alt_2',
+			mod_name..':jungleleaves_alt_3',
+		},
+		radius = 2,
+	})
+	mod.register_leafdecay({
+		trunks = {'default:tree'},
+		leaves = {
+			'default:apple',
+			mod_name..':orange',
+			mod_name..':pear',
+			'default:leaves',
+			mod_name..':leaves_alt_1',
+			mod_name..':leaves_alt_2',
+			mod_name..':leaves_alt_3',
+			mod_name..':leaves_cherry',
+		},
+		radius = 3,
+	})
+	mod.register_leafdecay({
+		trunks = {'default:pine_tree'},
+		leaves = {
+			'default:pine_needles',
+			mod_name..':pine_needles_alt_1',
+			mod_name..':pine_needles_alt_2',
+			mod_name..':pine_needles_alt_3',
+		},
+		radius = 3,
+	})
 end
 
 
