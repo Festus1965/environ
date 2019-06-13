@@ -475,6 +475,7 @@ do
 	newnode.groups = { snappy = 3, flammable = 2 }
 	minetest.register_node(mod_name..':leaves_cherry', newnode)
 
+	--[[
 	newnode = clone_node('default:leaves')
 	newnode.description = 'Palm Fronds'
 	newnode.tiles = { 'moretrees_palm_leaves.png' }
@@ -493,6 +494,7 @@ do
 			{ mod_name..':palm_tree' },
 		}
 	})
+	--]]
 
 	--newnode = clone_node('default:apple')
 	--newnode.description = 'Coconut'
