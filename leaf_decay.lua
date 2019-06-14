@@ -85,7 +85,6 @@ do
 			})
 		end
 		for _, v in pairs(def.leaves) do
-			print('on_timer ' .. v)
 			minetest.override_item(v, {
 				on_timer = function(pos)
 					leafdecay_on_timer(pos, def)
