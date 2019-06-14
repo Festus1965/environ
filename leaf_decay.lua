@@ -1,7 +1,7 @@
 -- Environ leaf_decay.lua
 
 -- This section is modified from the minetest code,
---  because the original doesn't seem to work.
+--  because the original is poorly contrived.
 
 -- GNU Lesser General Public License, version 2.1
 -- Copyright (C) 2011-2018 celeron55, Perttu Ahola <celeron55@gmail.com>
@@ -33,11 +33,14 @@ do
 			local node = minetest.get_node(v)
 			local timer = minetest.get_node_timer(v)
 			------------------------------------
-			-- This check seems to fail most of the time.
+			-- This check fails on my mapgen, because the code
+			--  that places schematics rotates their nodes
+			--  properly, unlike the game.
 			------------------------------------
 			--if node.param2 == 0 and not timer:is_started() then
+			if node.param2 < 4 and not timer:is_started() then
 				timer:start(math.random(20, 120) / 10)
-			--end
+			end
 			------------------------------------
 		end
 	end
