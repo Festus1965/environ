@@ -27,23 +27,6 @@ local clone_node = mod.clone_node
 dofile(mod.path..'/nodes.lua')
 
 
-minetest.clear_craft({
-	recipe = {
-		{'default:copper_ingot', 'default:copper_ingot', 'default:copper_ingot'},
-		{'default:copper_ingot', 'default:tin_ingot', 'default:copper_ingot'},
-		{'default:copper_ingot', 'default:copper_ingot', 'default:copper_ingot'},
-	}
-})
-minetest.register_craft({
-	type = 'shapeless',
-	output = 'default:bronze_ingot',
-	recipe = {
-		'default:tin_ingot',
-		'default:copper_ingot',
-	},
-})
-
-
 local singl = (minetest.get_mapgen_setting('mg_name') == 'singlenode')
 local function register_biome(def)
 	if not singl then
@@ -627,10 +610,13 @@ do
 			apple_deco = v
 		end
 		if v and name:find(':corals') then
-			v.flags = v.flags .. ', aquatic'
+			v.flags = (v.flags or '') .. ', aquatic'
 		end
 		if v and name:find(':kelp') then
-			v.flags = v.flags .. ', aquatic'
+			v.flags = (v.flags or '') .. ', aquatic'
+		end
+		if v and name:find(':papyrus') then
+			v.flags = (v.flags or '') .. ', aquatic'
 		end
 	end
 
